@@ -1,0 +1,66 @@
+
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+
+
+
+<style>
+  .solution-results {
+    background: white;
+    box-shadow: 0px 6px 8px rgba(73, 100, 166, 0.25);
+    border-radius: 3px;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    margin-bottom: 2.5rem;
+    height: auto;
+    overflow-x:scroll;
+    
+  }
+  .table{
+    border-spacing: 0;
+    border: 2px;
+    width: 950px;
+
+  }
+
+  .solution-results table { 
+   width: 100%;
+}
+@media only screen and (max-width: 600px) {
+.solution-results table {
+   width: 950px;
+  }
+}
+
+  tr:nth-child(even){
+    background-color: #e5e5e5;
+  }
+  .table__cell {
+    text-align: center;
+  }
+  .tr {
+    padding: 5px;
+  }
+</style>
+</head>
+<body style="background-color:#254B80 !important;">
+<div class="solution-results solution-cost">
+  <table class="table">
+    <thead class="table__header">
+      <tr>
+        <th class="table__cell">Order ID</th> <th class="table__cell" > Arrival Time</th> <th class="table__cell"> Address </th> <th class="table__cell">Additional Info</th> 
+      </tr>
+    </thead>
+    <tbody class="table__row">
+    {% for i in dflist -%}
+      <tr>
+        <td class="table__cell">{{i[0]}}</td> <td class="table__cell">{{i[1]}}</td> <td class="table__cell">{{i[2]}}</td> <td class="table__cell">{{i[3]}}</td> <td class="table__cell">{{i[4]}}</td> 
+      </tr>
+    {% endfor -%}
+    </tbody>
+  </table>
+</div>
+</body>

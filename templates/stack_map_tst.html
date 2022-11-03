@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            html, body { height: 100%; margin: 0; padding: 0; }
+
+            #map {
+            flex-basis: 0;
+            flex-grow: 4;
+            height: 100%;
+            width: 100%;
+            }
+            map > div {
+                border-radius: 10px;
+            }
+            
+        </style>
+    </head>
+
+    <body>
+
+        
+        <div id="map"></div>
+        
+            
+       
+
+
+        <script>
+
+        var stations= {{waypoints|tojson}};
+        var store=stations[0];
+
+
+
+        function initMap() {
+            var service = new google.maps.DirectionsService;
+            var map = new google.maps.Map(document.getElementById('map'));
+        
+            // list of points
+            
+        
+            // Zoom and center map automatically by stations (each station will be in visible map area)
+            var lngs = stations.map(function(station) { return station.lng; });
+            var lats = stations.map(function(station) { return station.lat; });
+            map.fitBounds({
+                west: Math.min.apply(null, lngs),
+                east: Math.max.apply(null, lngs),
+                north: Math.min.apply(null, lats),
+                south: Math.max.apply(null, lats),
+            });
+        
+            // Show stations on the map as markers
+
+            const icon = {
+                url: "https://i.postimg.cc/522hrJXL/Depot-Location.png", 
+                scaledSize: { width: 45, height: 54 },
+                origin: new google.maps.Point(0,0), 
+                anchor: new google.maps.Point(21,47),
+            }
+
+            new google.maps.Marker({
+                position: store,
+                map: map,
+                icon: icon
+            });
+
+            for (var i = 1; i < stations.length-1; i++) {
+                new google.maps.Marker({
+                    position: stations[i],
+                    map: map,
+                    label: {text:String(i),color:"white"}
+                });
+            }
+        
+            // Divide route to several parts because max stations limit is 25 (23 waypoints + 1 origin + 1 destination)
+            for (var i = 0, parts = [], max = 25 - 1; i < stations.length; i = i + max)
+                parts.push(stations.slice(i, i + max + 1));
+        
+            // Service callback to process service results
+            var service_callback = function(response, status) {
+                if (status != 'OK') {
+                    console.log('Directions request failed due to ' + status);
+                    return;
+                }
+                var renderer = new google.maps.DirectionsRenderer;
+                renderer.setMap(map);
+                renderer.setOptions({ suppressMarkers: true, preserveViewport: true });
+                renderer.setDirections(response);
+
+            };
+        
+            // Send requests to service to get route (for stations count <= 25 only one request will be sent)
+            for (var i = 0; i < parts.length; i++) {
+                // Waypoints does not include first station (origin) and last station (destination)
+                var waypoints = [];
+                for (var j = 1; j < parts[i].length - 1; j++)
+                    waypoints.push({location: parts[i][j], stopover: false});
+                // Service options
+                var service_options = {
+                    origin: parts[i][0],
+                    destination: parts[i][parts[i].length - 1],
+                    waypoints: waypoints,
+                    travelMode: 'DRIVING',
+                    optimizeWaypoints: false
+                };
+                // Send request
+                service.route(service_options, service_callback);
+            }
+        }
+        </script>
+
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLD0WOO-DmYYNisl-Qgku514-v7AgZz1c&callback=initMap"></script>
+
+    </body>
+</html>

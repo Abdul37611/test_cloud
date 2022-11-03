@@ -1,0 +1,20 @@
+<div class="solution-results solution-cost">
+    <h2>Solution Cost</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Vehicle</th> <th>Optimized Solution Cost (m)</th> <th>Completed Deliveries </th> <th>Large Package</th> <th>Small Package</th> <th>Fragiles</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for vehicle_id, cost_info in solution_cost_information.items() -%}
+        <tr>
+          <td>{{vehicle_id}}</td> <td>{{"{:.0f}".format(cost_info["optimized_cost"])}}</td> <td>{{cost_info["forces_serviced"]}}</td> <td>{{cost_info["water"]}}</td> <td>{{cost_info["food"]}}</td> <td>{{cost_info["other"]}}</td>
+        </tr>
+      {% endfor -%}
+      <tr class ="totals">
+          <td>Total</td> <td>{{"{:.0f}".format(total_cost_information["optimized_cost"])}}</td> <td>{{total_cost_information["forces_serviced"]}}</td> <td>{{total_cost_information["water"]}}</td> <td>{{total_cost_information["food"]}}</td> <td>{{total_cost_information["other"]}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
